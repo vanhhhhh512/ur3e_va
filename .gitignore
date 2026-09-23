@@ -1,0 +1,13 @@
+build/
+install/
+log/
+out/
+__pycache__/
+*.pyc
+.colcon/
+.ros/
+.ignition/
+.rviz2/
+.gazebo/
+simhome/
+src/ur_pen_plotter/config/ur3e/

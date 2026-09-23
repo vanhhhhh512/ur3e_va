@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<!-- The gioi mo phong: nen + mot tam bang trang dung thang truoc robot.
+     Tam bang CHI CO visual (khong co collision) nen dau but khong bi day nguoc
+     lam rung canh tay; no chi de nhin thay "mat phang 2D" ma robot dang ve len. -->
+<sdf version="1.6">
+  <world name="pen_board">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin filename="ignition-gazebo-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="ignition-gazebo-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="ignition-gazebo-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="ignition-gazebo-contact-system" name="gz::sim::systems::Contact"/>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.75 0.75 0.78 1</ambient>
+            <diffuse>0.75 0.75 0.78 1</diffuse>
+            <specular>0.3 0.3 0.3 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Mat truoc cua bang nam tai x = 0.40 m, trung voi tham so plane_x trong canvas.yaml. -->
+    <model name="drawing_board">
+      <static>true</static>
+      <pose>0.406 0 0.28 0 0 0</pose>
+      <link name="board">
+        <visual name="surface">
+          <geometry><box><size>0.012 0.60 0.60</size></box></geometry>
+          <material>
+            <ambient>0.97 0.97 0.95 1</ambient>
+            <diffuse>0.97 0.97 0.95 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+        <visual name="frame">
+          <pose>0.008 0 0 0 0 0</pose>
+          <geometry><box><size>0.010 0.64 0.64</size></box></geometry>
+          <material>
+            <ambient>0.15 0.17 0.20 1</ambient>
+            <diffuse>0.15 0.17 0.20 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

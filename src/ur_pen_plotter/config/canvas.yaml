@@ -1,0 +1,52 @@
+# Toan bo hinh hoc cua ban ve nam o day - doi so o day la doi ca hai hinh,
+# khong phai sua lai C++. Ap dung cho ca draw_shapes_node lan stroke_preview.
+/**:
+  ros__parameters:
+    # ---- Mat phang ve (canvas) ----
+    # Mat phang vuong goc truc X, cach de robot plane_x met. Truc u cua canvas chay
+    # theo -Y cua world, truc v chay theo +Z. Goc canvas (u=0, v=0) o do cao canvas_origin_z.
+    plane_x: 0.40            # mat truoc tam bang, cung la noi dau but cham
+    canvas_origin_z: 0.33
+    pen_length: 0.10         # phai khop pen_length trong urdf/ur3e_pen.urdf.xacro
+    pen_lift: 0.05           # nhac but lui theo -X khi di chuyen giua hai hinh
+    sample_step: 0.002       # buoc lay mau doc theo net ve (2 mm)
+
+    # ---- Hinh 1: duong tron (ve truoc) ----
+    circle_centre_u: -0.11
+    circle_centre_v: 0.0
+    circle_radius: 0.04
+
+    # ---- Hinh 2: chu V ----
+    vee_centre_u: 0.0
+    vee_centre_v: 0.0
+    vee_width: 0.08
+    vee_height: 0.11
+
+    # ---- Hinh 3: chu A (hai net, nhac but giua hai net) ----
+    a_centre_u: 0.11
+    a_centre_v: 0.0
+    a_width: 0.08
+    a_height: 0.11
+    a_bar_ratio: 0.4         # do cao thanh ngang, tinh tu day chu (0 = day, 1 = dinh)
+
+    # ---- Rang buoc bo tri ----
+    # Hai hinh phai cach nhau it nhat min_stroke_gap de khong ve de len nhau.
+    # Node se tu do khoang ho nho nhat va dung lai neu vi pham.
+    min_stroke_gap: 0.03
+    max_tool_reach: 0.45     # UR3e voi toi 0.50 m tinh tu truc vai
+
+    # ---- Thuc thi ----
+    # Bat kiem tra va cham khi noi suy duong Cartesian de khong bao gio sinh ra
+    # quy dao tu va cham; dat false chi khi can ep duong di qua vung sat gioi han.
+    wait_for_button: false   # true thi cho bam Next trong panel RvizVisualToolsGui
+    avoid_collisions: true
+    cartesian_step: 0.005
+    velocity_scaling: 0.15
+    acceleration_scaling: 0.15
+    planning_time: 10.0
+
+    # ---- Net muc + ghi log ----
+    trail_line_width: 0.006
+    trail_min_spacing: 0.0015
+    trail_csv: ""
+    planned_csv: ""

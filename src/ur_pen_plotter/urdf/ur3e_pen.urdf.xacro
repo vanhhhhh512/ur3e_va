@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!-- UR3e cho Ignition Gazebo, gan them mot cay but vao mat bich tool0.
+
+     LUU Y khi sua file nay. Launch cua ur_simulation_gz truyen chuoi URDF vao tham so
+     robot_description ma khong boc ParameterValue nen launch doc chuoi do nhu YAML.
+     Mot dau hai cham o CUOI DONG trong comment se lam hong buoc khoi dong. Test
+     test_urdf_yaml_safe.py canh dieu nay. -->
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="$(arg name)">
+  <xacro:arg name="name" default="ur"/>
+  <xacro:arg name="ur_type" default="ur3e"/>
+  <xacro:arg name="prefix" default=""/>
+
+  <!-- Bon file cau hinh cua tay may. Mac dinh lay thang tu ur_description; launch cua
+       MoveIt se tro chung sang ban da cai kem package nay. -->
+  <xacro:arg name="joint_limit_params" default="$(find ur_description)/config/$(arg ur_type)/joint_limits.yaml"/>
+  <xacro:arg name="kinematics_params" default="$(find ur_description)/config/$(arg ur_type)/default_kinematics.yaml"/>
+  <xacro:arg name="physical_params" default="$(find ur_description)/config/$(arg ur_type)/physical_parameters.yaml"/>
+  <xacro:arg name="visual_params" default="$(find ur_description)/config/$(arg ur_type)/visual_parameters.yaml"/>
+  <xacro:arg name="initial_positions_file" default="$(find ur_description)/config/initial_positions.yaml"/>
+
+  <xacro:arg name="safety_limits" default="true"/>
+  <xacro:arg name="safety_pos_margin" default="0.15"/>
+  <xacro:arg name="safety_k_position" default="20"/>
+
+  <xacro:arg name="sim_ignition" default="true"/>
+  <xacro:arg name="simulation_controllers" default=""/>
+
+  <!-- But ve. Chieu dai phai khop tham so pen_length trong config/canvas.yaml -->
+  <xacro:arg name="pen_length" default="0.10"/>
+  <xacro:arg name="pen_radius" default="0.006"/>
+
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+  <xacro:property name="prefix" value="$(arg prefix)"/>
+  <xacro:property name="pen_length" value="$(arg pen_length)"/>
+  <xacro:property name="pen_radius" value="$(arg pen_radius)"/>
+  <xacro:property name="start_pose" value="${xacro.load_yaml('$(arg initial_positions_file)')}"/>
+
+  <link name="world"/>
+
+  <xacro:ur_robot
+    name="$(arg name)"
+    tf_prefix="${prefix}"
+    parent="world"
+    ur_type="$(arg ur_type)"
+    joint_limits_parameters_file="$(arg joint_limit_params)"
+    kinematics_parameters_file="$(arg kinematics_params)"
+    physical_parameters_file="$(arg physical_params)"
+    visual_parameters_file="$(arg visual_params)"
+    safety_limits="$(arg safety_limits)"
+    safety_pos_margin="$(arg safety_pos_margin)"
+    safety_k_position="$(arg safety_k_position)"
+    sim_ignition="$(arg sim_ignition)"
+    initial_positions="${start_pose}">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:ur_robot>
+
+  <!-- But la hinh tru doc truc Z cua tool0, dau but tai z = pen_length.
+       Khong khai bao collision vi SRDF cua ur_moveit_config khong biet link nay nen ma
+       tran cho phep va cham se khong tat cap but voi co tay. -->
+  <link name="${prefix}pen">
+    <visual>
+      <origin xyz="0 0 ${pen_length / 2.0}" rpy="0 0 0"/>
+      <geometry><cylinder radius="${pen_radius}" length="${pen_length}"/></geometry>
+      <material name="pen_ink"><color rgba="0.05 0.25 0.85 1"/></material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 ${pen_length / 2.0}" rpy="0 0 0"/>
+      <mass value="0.02"/>
+      <inertia ixx="1.8e-05" ixy="0.0" ixz="0.0" iyy="1.8e-05" iyz="0.0" izz="4.0e-07"/>
+    </inertial>
+  </link>
+
+  <joint name="${prefix}pen_joint" type="fixed">
+    <parent link="${prefix}tool0"/>
+    <child link="${prefix}pen"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <xacro:if value="$(arg sim_ignition)">
+    <gazebo>
+      <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <parameters>$(arg simulation_controllers)</parameters>
+        <!-- Giao dien vi tri cua Ignition bam cham, tang gain de giam tre bam quy dao -->
+        <position_proportional_gain>0.5</position_proportional_gain>
+        <controller_manager_node_name>${prefix}controller_manager</controller_manager_node_name>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+</robot>
