@@ -7,8 +7,7 @@ lên một mặt phẳng dựng đứng trước mặt robot. Robot vẽ lần l
 2. **chữ V** — vẽ liền một nét,
 3. **chữ A** — hai nét, giữa hai nét robot nhấc bút lên rồi hạ xuống chỗ mới.
 
-V và A là hai chữ cái đầu trong tên người thực hiện (Việt Anh); đường tròn giữ lại theo yêu cầu
-video demo của đề bài.
+V và A là hai chữ cái đầu trong tên người thực hiện (Việt Anh)
 
 Trọng tâm của cách làm ở đây là **tách phần hình học ra khỏi phần điều khiển**. Hình vẽ được mô tả
 bằng toạ độ 2D `(u, v)` ngay trên mặt phẳng giấy, không dính gì tới hệ toạ độ của robot; một lớp
