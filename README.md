@@ -62,6 +62,14 @@ ur3e_va/
     └── worlds/pen_board.sdf     # nền + tấm bảng trắng dựng tại x = 0.40 m
 ```
 
+Ba launch file nằm trong `src/ur_pen_plotter/launch/`:
+
+| Launch file | Nhiệm vụ |
+| :--- | :--- |
+| **`demo_all.launch.py`** | Chạy trọn bộ bằng một lệnh: Gazebo + ros2_control + MoveIt + RViz + node vẽ |
+| **`bringup_sim.launch.py`** | Chỉ dựng môi trường mô phỏng: Gazebo (UR3e + bảng vẽ), controller, MoveIt, RViz |
+| **`draw.launch.py`** | Chỉ chạy node điều khiển `draw_shapes_node`, dùng khi môi trường đã sẵn |
+
 ---
 
 ## 3. Yêu cầu hệ thống và cài đặt
@@ -137,16 +145,16 @@ Về dung sai controller: trong Gazebo có trọng lực, giao diện điều kh
 
 ## 5. Hướng dẫn chạy
 
-### Cách 1 — một lệnh duy nhất
+### Cách 1 — một lệnh duy nhất: **`demo_all.launch.py`**
 
 ```bash
 ros2 launch ur_pen_plotter demo_all.launch.py
 ```
 
-Launch mở Gazebo, MoveIt, RViz rồi tự chạy node vẽ sau 25 giây. Máy yếu thì tăng thời gian chờ:
+**`demo_all.launch.py`** mở Gazebo, MoveIt, RViz rồi tự chạy node vẽ sau 25 giây. Máy yếu thì tăng thời gian chờ:
 `demo_all.launch.py start_delay:=40.0`.
 
-### Cách 2 — bấm nút rồi mới vẽ (dùng khi quay video)
+### Cách 2 — bấm nút rồi mới vẽ (dùng khi quay video): **`demo_all.launch.py`**
 
 ```bash
 ros2 launch ur_pen_plotter demo_all.launch.py wait_for_button:=true
@@ -157,7 +165,7 @@ dự định (topic `/pen_waypoints`). Khi nào sẵn sàng quay thì bấm **Ne
 `RvizVisualToolsGui` ở góc dưới bên trái RViz, robot mới bắt đầu. Nét mực thật vẽ đè lên chuỗi điểm
 trắng đó nên nhìn được ngay robot bám quỹ đạo sát tới đâu.
 
-### Cách 3 — hai terminal, chủ động từng bước
+### Cách 3 — hai terminal: **`bringup_sim.launch.py`** và **`draw.launch.py`**
 
 ```bash
 # Terminal 1
@@ -343,9 +351,9 @@ Kết quả một lần chạy đầy đủ với tham số mặc định:
 | Yêu cầu của đề | Đáp ứng ở đâu |
 | :--- | :--- |
 | Ubuntu 22.04 + ROS 2 Humble Desktop | Mục 3 |
-| Chạy được UR3/UR3e simulation với Gazebo | `bringup_sim.launch.py` → `ur_simulation_gz` + Ignition Fortress |
+| Chạy được UR3/UR3e simulation với Gazebo | **`bringup_sim.launch.py`** → `ur_simulation_gz` + Ignition Fortress |
 | Kiểm tra robot, joint state, controller | Mục 5 |
-| Package ROS 2 có launch file điều khiển UR3e viết chữ | Package `ur_pen_plotter`, một lệnh `demo_all.launch.py` |
+| Package ROS 2 có launch file điều khiển UR3e viết chữ | Package `ur_pen_plotter`, launch file **`demo_all.launch.py`** |
 | Viết chữ cái đầu trong tên sinh viên | Việt Anh → **V** và **A** |
 | Chữ nằm trong mặt phẳng Cartesian tự chọn | Mặt phẳng `x = plane_x`, hệ canvas `(u, v)` — mục 6.1 |
 | Tự thiết kế tập waypoint | `src/strokes.cpp`, lấy mẫu 2 mm — mục 6.3 |
