@@ -19,7 +19,7 @@ tầm với lớn nhất của cổ tay, vi phạm thì dừng ngay thay vì v�
 **thực tế** của đầu bút được lấy từ TF rồi dựng thành nét mực trong RViz2 và ghi ra CSV, nên sai
 lệch giữa quỹ đạo dự định và quỹ đạo robot đi thật được đo bằng số chứ không phải nhìn bằng mắt.
 
-* **Video demo:** *(điền link Google Drive)*
+* **Video demo:** * https://drive.google.com/file/d/1nHhbue1MiObiLiVmMy75oJm3AzpGKf51/view?usp=drive_link *
 * **Mã nguồn:** https://github.com/vanhhhhh512/ur3e_va
 
 ---
