@@ -1,6 +1,6 @@
 # UR3e viết chữ trên mặt phẳng 2D — ROS 2 Humble + MoveIt 2 + Ignition Gazebo
 
-## 1. Giới thiệu đề tài
+## 1. Giới thiệu
 
 Bài thực hành xây dựng một package ROS 2 điều khiển cánh tay **Universal Robots UR3e** cầm bút vẽ
 lên một mặt phẳng dựng đứng trước mặt robot. Robot vẽ lần lượt ba hình:
@@ -72,7 +72,7 @@ Ba launch file nằm trong `src/ur_pen_plotter/launch/`:
 
 ---
 
-## 3. Yêu cầu hệ thống và cài đặt
+## 3. Cài đặt ROS Humble
 
 | Thành phần | Phiên bản |
 | :--- | :--- |
@@ -121,7 +121,7 @@ sudo apt install -y xvfb ffmpeg imagemagick python3-pytest
 
 ---
 
-## 4. Hướng dẫn build
+## 4. Build
 
 ```bash
 git clone https://github.com/vanhhhhh512/ur3e_va.git
@@ -143,7 +143,7 @@ Về dung sai controller: trong Gazebo có trọng lực, giao diện điều kh
 
 ---
 
-## 5. Hướng dẫn chạy
+## 5. Cách chạy
 
 ### Cách 1 — một lệnh duy nhất: **`demo_all.launch.py`**
 
@@ -212,7 +212,7 @@ Lớp `Canvas` làm hai việc khi đổi `(u, v)` thành pose cho MoveIt:
 * lùi mặt bích lại đúng `pen_length`, vì thứ phải chạm mặt phẳng là **đầu bút** chứ không phải
   `tool0`. Cây bút là một link thật trong URDF, gắn cứng vào `tool0`.
 
-### 6.2 Thoát điểm kỳ dị
+### 6.2 Cách thoát điểm kỳ dị
 
 Khi Gazebo vừa khởi động, UR3e nằm ở cấu hình toàn bộ khớp bằng 0, tức cánh tay duỗi thẳng — đúng
 một điểm kỳ dị, ma trận Jacobian suy biến nên mọi lời gọi IK đều hỏng. Node vì thế luôn đưa robot
@@ -237,7 +237,7 @@ cách nhau 2 mm dọc theo nét:
 Hai nét của chữ A cắt nhau, nên mỗi `Stroke` mang thêm tên hình (`group`); phép kiểm tra khoảng hở
 chỉ áp dụng giữa các hình khác nhau, không bắt lỗi hai nét trong cùng một chữ.
 
-### 6.4 Kiểm tra bố trí trước khi chạy
+### 6.4 Kiểm tra trước khi chạy
 
 `checkLayout()` duyệt mọi cặp nét khác hình, tính khoảng cách nhỏ nhất giữa hai tập điểm rồi so với
 `min_stroke_gap`; đồng thời tính tầm với lớn nhất của `tool0` — đo từ **trục khớp vai** ở độ cao
@@ -274,7 +274,7 @@ Hai chỗ phải xử lý vì MoveIt chọn nghiệm ngẫu nhiên:
   tiếp cận lại, tối đa 3 lần; vẫn không được thì bỏ ràng buộc "hạ thẳng" và để OMPL tự tìm đường tới
   điểm chạm.
 
-### 6.6 Vết mực và số liệu đo
+### 6.6 Đường vẽ và số liệu đo
 
 Một timer 25 ms tra TF giữa `world` và `tool0`, cộng thêm `pen_length` dọc trục Z của tool để ra vị
 trí **đầu bút thực tế**, rồi nối vào `visualization_msgs/Marker` kiểu `LINE_STRIP` — mỗi nét một
@@ -289,7 +289,7 @@ di chuyển trước đó — bản vẽ méo hoàn toàn dù robot đi đúng.
 
 ---
 
-## 7. Tham số bản vẽ
+## 7. Các tham số vẽ
 
 Toàn bộ hình học nằm trong `src/ur_pen_plotter/config/canvas.yaml`, sửa xong chạy lại là có hiệu
 lực, không cần build lại.
@@ -320,7 +320,7 @@ ros2 launch ur_pen_plotter draw.launch.py params_file:=/duong/dan/canvas_cua_ban
 
 ---
 
-## 8. Kiểm chứng và kết quả đo
+## 8. Kết quả đo
 
 Tám test hình học chạy được mà không cần Gazebo:
 
@@ -343,24 +343,3 @@ Kết quả một lần chạy đầy đủ với tham số mặc định:
 | Sai số bám quỹ đạo, trung bình | tròn 0.50 mm · V 0.46 mm · khung A 0.52 mm · ngang A 0.48 mm |
 | Sai số bám lớn nhất | 0.99 mm |
 | Độ lệch đầu bút so với mặt phẳng vẽ | lớn nhất 0.07 mm |
-
----
-
-## 9. Đối chiếu với yêu cầu bài thực hành
-
-| Yêu cầu của đề | Đáp ứng ở đâu |
-| :--- | :--- |
-| Ubuntu 22.04 + ROS 2 Humble Desktop | Mục 3 |
-| Chạy được UR3/UR3e simulation với Gazebo | **`bringup_sim.launch.py`** → `ur_simulation_gz` + Ignition Fortress |
-| Kiểm tra robot, joint state, controller | Mục 5 |
-| Package ROS 2 có launch file điều khiển UR3e viết chữ | Package `ur_pen_plotter`, launch file **`demo_all.launch.py`** |
-| Viết chữ cái đầu trong tên sinh viên | Việt Anh → **V** và **A** |
-| Chữ nằm trong mặt phẳng Cartesian tự chọn | Mặt phẳng `x = plane_x`, hệ canvas `(u, v)` — mục 6.1 |
-| Tự thiết kế tập waypoint | `src/strokes.cpp`, lấy mẫu 2 mm — mục 6.3 |
-| Chia chữ nhiều nét, nhấc đầu công tác giữa hai nét | Chữ A gồm 2 nét, `pen_lift = 5 cm` — mục 6.5 |
-| Dùng MoveIt 2 để lập kế hoạch và thực thi | `MoveGroupInterface` + `computeCartesianPath` |
-| Kích thước đủ lớn để quan sát rõ | Đường tròn Ø 8 cm, mỗi chữ 8 × 11 cm |
-| Không vượt giới hạn khớp | Giới hạn khớp từ `ur_description`, thêm chặn `max_tool_reach` |
-| Không self-collision | `avoid_collisions = true`, MoveIt kiểm tra lại mọi đường OMPL |
-| Hiện đường đi end-effector trên RViz | Marker `/pen_ink` và waypoint `/pen_waypoints` — mục 6.6 |
-| Video demo quỹ đạo hình tròn | `out/demo.mp4` do `scripts/sim_test.sh` sinh |
