@@ -1,5 +1,3 @@
-# UR3e viết chữ trên mặt phẳng 2D — ROS 2 Humble + MoveIt 2 + Ignition Gazebo
-
 ## 1. Giới thiệu
 
 Bài thực hành xây dựng một package ROS 2 điều khiển cánh tay **Universal Robots UR3e** cầm bút vẽ
